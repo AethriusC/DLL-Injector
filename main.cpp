@@ -6,7 +6,7 @@ int main()
     const char* dllPath = "C:\\path\\to\\mydll.dll";
     const char* processName = "notepad.exe";
 
-    // Get process ID of target process
+    
     DWORD processId = 0;
     PROCESSENTRY32 entry;
     entry.dwSize = sizeof(PROCESSENTRY32);
@@ -29,7 +29,7 @@ int main()
         return 1;
     }
 
-    // Open target process
+    
     HANDLE process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
     if (process == NULL)
     {
@@ -45,14 +45,14 @@ int main()
         return 1;
     }
 
-    // Write DLL path to target process memory
+    
     if (!WriteProcessMemory(process, dllPathAddr, dllPath, strlen(dllPath) + 1, NULL))
     {
         std::cout << "Could not write to process memory\n";
         return 1;
     }
 
-    // Get LoadLibrary address
+    
     HMODULE kernel32 = GetModuleHandle("kernel32.dll");
     LPVOID loadLibraryAddr = (LPVOID)GetProcAddress(kernel32, "LoadLibraryA");
     if (loadLibraryAddr == NULL)
@@ -71,7 +71,7 @@ int main()
 
     std::cout << "DLL injected successfully\n";
 
-    // Cleanup
+    
     CloseHandle(thread);
     VirtualFreeEx(process, dllPathAddr, 0, MEM_RELEASE);
     CloseHandle(process);
